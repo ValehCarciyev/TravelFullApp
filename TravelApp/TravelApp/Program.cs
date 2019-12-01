@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using TravelApp.Data;
 
 namespace TravelApp
 {
@@ -14,7 +16,16 @@ namespace TravelApp
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            IWebHost host = CreateWebHostBuilder(args).Build();
+            using (IServiceScope scope = host.Services.CreateScope())
+            {
+                using (AppDbContext context = scope.ServiceProvider.GetRequiredService<AppDbContext>())
+                {
+                    context.SeedAsync(scope).Wait();
+                }
+            }
+
+            host.Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

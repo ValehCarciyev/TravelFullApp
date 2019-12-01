@@ -24,10 +24,10 @@ namespace TravelApp.Core.Filters
         public void OnActionExecuting(ActionExecutingContext context)
         {
              int langId= Convert.ToInt32(context.HttpContext.Session.GetString("lang_id"));
-            if (langId == 0)
-            {
-                context.HttpContext.SetLanguageAsync(db, "lang_id", null).Wait();
-            }
+              if (langId == 0)
+              {
+                  context.HttpContext.SetLanguageAsync(db, "lang_id", null).Wait();
+              }
 
         }
     }

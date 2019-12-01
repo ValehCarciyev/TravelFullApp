@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,5 +28,47 @@ namespace TravelApp.Data
         public DbSet<TestimonialLanguage> TestimonialLanguages { get; set; }
         public DbSet<Work> Works { get; set; }
         public DbSet<Language> Languages { get; set; }
+
+        public async Task SeedAsync(IServiceScope scope)
+        {
+            if (!this.Languages.Any())
+            {
+                List<Language> languages = new List<Language>
+                {
+                    new Language()
+                    {
+                        Name = "English",
+                        Key = "en-US"
+                    },
+                    new Language()
+                    {
+                        Name = "Azerbaijan",
+                        Key = "az-Latn"
+                    }
+                };
+
+                await this.Languages.AddRangeAsync(languages);
+                await this.SaveChangesAsync();
+            }
+
+            if (!this.Users.Any() && !this.Roles.Any())
+            {
+                AppUser user = new AppUser()
+                {
+                    Name = "Admin",
+                    Surname = "Admin",
+                    Email = "admin@gmail.com",
+                    UserName = "admin@gmail.com"
+                };
+                UserManager<AppUser> _userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+                RoleManager<IdentityRole> _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+
+                await _userManager.CreateAsync(user, "Admin123@");
+                await _roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });
+                await _userManager.AddToRoleAsync(user, "admin");
+            }
+
+        }
     }
 }

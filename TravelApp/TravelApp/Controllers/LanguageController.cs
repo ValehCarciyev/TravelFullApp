@@ -25,7 +25,6 @@ namespace TravelApp.Controllers
                     CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
                     new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
                  );
-
                 await HttpContext.SetLanguageAsync(db,"lang_id",culture);
                 return LocalRedirect(returnUrl);
         }

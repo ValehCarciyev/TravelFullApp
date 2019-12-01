@@ -22,11 +22,13 @@ namespace TravelApp.Controllers
         public async Task<IActionResult> Index()
         {
             int langId = await HttpContext.GetCurrentLanguageIdAsync(db,"lang_id");
+
             List<ServiceLanguage> serviceLanguages = await db.ServiceLanguages
                                                                 .Where(sl => sl.LanguageId == langId)
                                                                 .Include(sl=>sl.Service)
                                                                 .ThenInclude(sl=>sl.Photos)
                                                                 .ToListAsync();
+
             return View(serviceLanguages);
         }
 

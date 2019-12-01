@@ -56,6 +56,9 @@ namespace TravelApp
 
             services.AddDistributedMemoryCache();
             services.AddSession();
+
+            services.AddAuthentication();
+
             services.AddMvc()
                 //View Localization
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
@@ -69,6 +72,14 @@ namespace TravelApp
             services.AddIdentity<AppUser, IdentityRole>()
                                 .AddDefaultTokenProviders()
                                     .AddEntityFrameworkStores<AppDbContext>();
+
+
+            services.ConfigureApplicationCookie(option =>
+            {
+                option.LoginPath = "/Admin/Account/Login";
+                option.AccessDeniedPath = "/Home/Error";
+
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,13 +100,19 @@ namespace TravelApp
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseSession();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
+                 name: "areas",
+                 template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
+
+                routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-            });
+           });
         }
     }
 }

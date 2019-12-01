@@ -22,7 +22,6 @@ namespace TravelApp.Components
         {
             Language language = await HttpContext.GetCurrentLanguageAsync(db, "lang_id");
             List<Language> languages = await db.Languages.ToListAsync();
-
             LanguageModel model = new LanguageModel()
             {
                 CurrentLanguage = language,
