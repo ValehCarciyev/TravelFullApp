@@ -17,8 +17,6 @@ namespace TravelApp.Models.ViewModels
         [Required]
         [DataType(DataType.Text)]
         public string Message { get; set; }
-        [Required]
-        [DataType(DataType.Text)]
         public string Phone { get; set; }
     }
 }

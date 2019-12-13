@@ -281,11 +281,30 @@ namespace TravelApp.Migrations
 
                     b.Property<string>("Photo");
 
+                    b.HasKey("Id");
+
+                    b.ToTable("Members");
+                });
+
+            modelBuilder.Entity("TravelApp.Models.MemberLanguage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("LanguageId");
+
+                    b.Property<int>("MemberId");
+
                     b.Property<string>("Position");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Members");
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("MemberId");
+
+                    b.ToTable("MemberLanguages");
                 });
 
             modelBuilder.Entity("TravelApp.Models.Service", b =>
@@ -356,8 +375,6 @@ namespace TravelApp.Migrations
                     b.Property<string>("Instagram");
 
                     b.Property<string>("Location");
-
-                    b.Property<string>("Logo");
 
                     b.Property<string>("Phone");
 
@@ -493,6 +510,19 @@ namespace TravelApp.Migrations
                     b.HasOne("TravelApp.Models.Language", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("TravelApp.Models.MemberLanguage", b =>
+                {
+                    b.HasOne("TravelApp.Models.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("TravelApp.Models.Member", "Member")
+                        .WithMany()
+                        .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -66,15 +66,15 @@
             <p>Lorem Ipsum is simply dummy text of the printing and. </p>
         </div>
         <div class="row">
-            @foreach (Member member in Model.Members)
+            @foreach (MemberLanguage memberLanguage in Model.MemberLanguages)
             {
                 <div class="col-md-3 col-sm-6">
                     <div class="team-wrapper mb-30">
                         <div class="team-img">
-                            <a href="#"><img src="~/Uploads/Members/@member.Photo" alt="Members" /></a>
+                            <a href="#"><img src="~/Uploads/Members/@memberLanguage.Member.Photo" alt="Members" /></a>
                             <div class="team-text text-center">
-                                <h3>@member.Name</h3>
-                                <span>@member.Position</span>
+                                <h3>@memberLanguage.Member.Name</h3>
+                                <span>@memberLanguage.Position</span>
                             </div>
                         </div>
                     </div>

@@ -14,21 +14,21 @@ namespace TravelApp.Areas.Admin.Controllers
     [Authorize]
     public class PhotoController : Controller
     {
-        private readonly AppDbContext db;
         public async Task<JsonResult> Upload(List<IFormFile> Photos,string folder)
         {
             if(folder!=null && Photos.Count != 0 && Photos != null)
             {
                 foreach (IFormFile file in Photos)
                 {
-                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Uploads", "Services", file.FileName);
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Uploads", folder, file.FileName);
+                    string newPath = null;
                     if (System.IO.File.Exists(path))
                     {
-                        Guid guid = new Guid();
-                        path.Replace(file.FileName, guid + file.FileName);
+                        Guid guid = Guid.NewGuid();
+                        newPath = path.Replace(file.FileName, guid + file.FileName);
                     }
 
-                    using (FileStream fs = new FileStream(path, FileMode.Create))
+                    using (FileStream fs = new FileStream(newPath!=null?newPath:path, FileMode.Create))
                     {
                         await file.CopyToAsync(fs);
                     }

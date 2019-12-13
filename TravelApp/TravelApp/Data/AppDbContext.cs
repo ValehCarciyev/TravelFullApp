@@ -19,6 +19,7 @@ namespace TravelApp.Data
         public DbSet<Client> Clients { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Member> Members { get; set; }
+        public DbSet<MemberLanguage> MemberLanguages { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<ServiceLanguage> ServiceLanguages { get; set; }
         public DbSet<ServicePhoto> ServicePhotos { get; set; }

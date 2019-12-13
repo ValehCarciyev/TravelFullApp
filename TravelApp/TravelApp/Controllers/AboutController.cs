@@ -30,7 +30,7 @@ namespace TravelApp.Controllers
                                                     .Where(al => al.LanguageId == langId)
                                                     .Include(al => al.About)
                                                     .FirstOrDefaultAsync(),
-                Members = await db.Members.ToListAsync(),
+                MemberLanguages = await db.MemberLanguages.Include(m=>m.Member).ToListAsync(),
                 Clients = await db.Clients.ToListAsync(),
                 Works = await db.Works.ToListAsync()
             };

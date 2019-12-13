@@ -3,6 +3,7 @@
         e.preventDefault();
         e.stopImmediatePropagation();
         var location = $(this).data("refresh");
+        var url = $(this).data("url");
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
                 confirmButton: 'btn btn-success',
@@ -22,7 +23,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "/Admin/Service/Delete/" + $(this).data("id"),
+                    url: url + $(this).data("id"),
                     dataType: "json",
                     type: "post",
                     success: function (response) {
@@ -72,6 +73,7 @@
     //ON INPUT CHANGE PHOTO PROCESS
     $(".photo-upload-input").change(function () {
         let files = $(this).get(0).files;
+        let status = $(this).data("single");
         Swal.fire({
             title: 'Eminmisiniz?',
             text: "Bu resimler sitenize yüklenecek",
@@ -83,6 +85,15 @@
             cancelButtonText: 'Hayır'
         }).then((result) => {
             if (result.value) {
+                console.log(status)
+                if (status) {
+                    photos = [];
+                    $("#photos option").remove();
+                    if ($(".image-view li img").data("delete")) {
+                        AddToDeleteSelect($(".image-view li img").data("name"));
+                    }
+                    $(".image-view li").remove();
+                }
                 UpdatePhotosFromInput(files);
                 ShowPhotos(files);
                 AddToSelect(files);
@@ -95,9 +106,6 @@
         });
     });
     //DELETE PHOTO
-    $(".delete-photo-button").click(function () {
-        alert("test")
-    })
     $(".image-view ul").on("click", "li span", function (e) {
         Swal.fire({
             title: 'Eminmisiniz?',
@@ -112,6 +120,7 @@
             if (result.value) {
                 let name = $(this).parent().find("img").data("name");
                 DeletePhotoFromArray(name);
+                DeletePhotoFromSelect(name);
                 console.log(photos);
                 $(this).parent().remove();
                 Swal.fire(
@@ -141,7 +150,6 @@
         $(this).parents("form").submit();
     });
 
-
     function UpdatePhotosFromInput(files) {
         for (var file of files) {
             photos.push(file);
@@ -149,12 +157,27 @@
         return true;
     }
     function DeletePhotoFromArray(photo_name) {
+        let element = `<option selected value="${photo_name}"></option>`;
+        $("#delete-photos").append(element);
+
         for (var i = 0; i < photos.length; i++) {
             if (photos[i].name == photo_name) {
                 photos.splice(i, 1);
             }
         }
 
+    }
+    function AddToDeleteSelect(photo_name) {
+        let element = `<option selected value="${photo_name}"></option>`;
+        $("#delete-photos").append(element);
+    }
+    function DeletePhotoFromSelect(photo_name) {
+        let options = $("#photos option");
+        for (let option of options) {
+            if (option.value == photo_name) {
+                $("#photos option[value='" + option.value + "']").remove();
+            }
+        }
     }
     function ShowPhotos(files) {
         for (let photo of files) {
@@ -166,7 +189,7 @@
                     <span class="btn btn-danger delete-photo-button">Sil</span>
                     <img data-name="${photo.name}" src="${fileReader.result}" alt="Alternate Text" />
                 </li>`;
-                
+
                 $(".image-view ul").append(element);
             };
         }

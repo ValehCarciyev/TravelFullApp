@@ -10,8 +10,8 @@ using TravelApp.Data;
 namespace TravelApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20191123095233_LanguagesADDED")]
-    partial class LanguagesADDED
+    [Migration("20191213210025_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -136,6 +136,8 @@ namespace TravelApp.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Photo");
 
                     b.HasKey("Id");
 
@@ -281,11 +283,30 @@ namespace TravelApp.Migrations
 
                     b.Property<string>("Photo");
 
+                    b.HasKey("Id");
+
+                    b.ToTable("Members");
+                });
+
+            modelBuilder.Entity("TravelApp.Models.MemberLanguage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("LanguageId");
+
+                    b.Property<int>("MemberId");
+
                     b.Property<string>("Position");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Members");
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("MemberId");
+
+                    b.ToTable("MemberLanguages");
                 });
 
             modelBuilder.Entity("TravelApp.Models.Service", b =>
@@ -347,6 +368,8 @@ namespace TravelApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Clock");
+
                     b.Property<string>("Email");
 
                     b.Property<string>("Facebook");
@@ -354,8 +377,6 @@ namespace TravelApp.Migrations
                     b.Property<string>("Instagram");
 
                     b.Property<string>("Location");
-
-                    b.Property<string>("Logo");
 
                     b.Property<string>("Phone");
 
@@ -494,6 +515,19 @@ namespace TravelApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("TravelApp.Models.MemberLanguage", b =>
+                {
+                    b.HasOne("TravelApp.Models.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("TravelApp.Models.Member", "Member")
+                        .WithMany()
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("TravelApp.Models.ServiceLanguage", b =>
                 {
                     b.HasOne("TravelApp.Models.Language", "Language")
@@ -510,7 +544,7 @@ namespace TravelApp.Migrations
             modelBuilder.Entity("TravelApp.Models.ServicePhoto", b =>
                 {
                     b.HasOne("TravelApp.Models.Service", "Service")
-                        .WithMany()
+                        .WithMany("Photos")
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

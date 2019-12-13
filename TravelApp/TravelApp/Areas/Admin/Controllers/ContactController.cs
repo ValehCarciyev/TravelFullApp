@@ -21,7 +21,7 @@ namespace TravelApp.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            List<Contact> contacts = await db.Contacts.ToListAsync();
+            List<Contact> contacts = await db.Contacts.OrderByDescending(c=>c.CreatedDate).ToListAsync();
             return View(contacts);
         }
     }

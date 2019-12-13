@@ -20,9 +20,10 @@ namespace TravelApp.Controllers
 
         [HttpGet]
         [ServiceFilter(typeof(CheckLanguageFilter))]
-        public IActionResult SendMessage()
+        public IActionResult Index()
         {
-            return View();
+            Setting setting = db.Settings.FirstOrDefault();
+            return View(setting);
         }
 
         [HttpPost]
@@ -42,12 +43,11 @@ namespace TravelApp.Controllers
                 await db.Contacts.AddAsync(contact);
                 await db.SaveChangesAsync();
 
-
                 TempData["IsSend"] = "true";
                 return RedirectToAction("Index", "Home");
 
             }
-            return View();
+            return RedirectToAction(nameof(Index));
         }
     }
 }
